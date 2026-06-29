@@ -1,0 +1,16 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/Grimoire.Cli/Grimoire.Cli.csproj" />
+    <Project Path="src/Grimoire.Core/Grimoire.Core.csproj" />
+    <Project Path="src/Grimoire.Ui/Grimoire.Ui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Grimoire.Core.Tests/Grimoire.Core.Tests.csproj" />
+    <Project Path="tests/Grimoire.Ui.Tests/Grimoire.Ui.Tests.csproj" />
+  </Folder>
+</Solution>

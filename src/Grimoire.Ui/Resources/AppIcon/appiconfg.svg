@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(0,2)">
+        <path d="M102 112C102 94 116 80 134 80H222V352H134C116 352 102 338 102 320V112Z" fill="#6c4424" />
+        <path d="M234 80H322C340 80 354 94 354 112V320C354 338 340 352 322 352H234V80Z" fill="#7e4f2a" />
+        <rect x="218" y="72" width="20" height="288" rx="9" fill="#2f1b0f" />
+        <path d="M128 112H204V330H128C121 330 116 325 116 318V122C116 116 121 112 128 112Z" fill="#f6ebcf" />
+        <path d="M252 112H328C335 112 340 116 340 122V318C340 325 335 330 328 330H252V112Z" fill="#f6ebcf" />
+        <rect x="136" y="136" width="60" height="8" rx="4" fill="#dbcba6" />
+        <rect x="136" y="156" width="52" height="8" rx="4" fill="#dbcba6" />
+        <rect x="136" y="176" width="56" height="8" rx="4" fill="#dbcba6" />
+        <rect x="260" y="136" width="60" height="8" rx="4" fill="#dbcba6" />
+        <rect x="260" y="156" width="52" height="8" rx="4" fill="#dbcba6" />
+        <rect x="260" y="176" width="56" height="8" rx="4" fill="#dbcba6" />
+        <circle cx="228" cy="236" r="30" fill="#c79b45" />
+        <path d="M228 214L234 230H250L237 240L243 256L228 246L213 256L219 240L206 230H222Z" fill="#fff4d4" />
+        <path d="M228 44L234 62H252L238 72L244 90L228 80L212 90L218 72L204 62H222Z" fill="#f8e6be" />
+        <rect x="224" y="92" width="8" height="20" rx="4" fill="#f8e6be" />
+    </g>
+</svg>

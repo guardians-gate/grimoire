@@ -1,0 +1,164 @@
+cli:
+  rootDescription: Grimoire sourcebook compiler and lore MCP server.
+  copyrightNotices: |
+    Copyright (c) 2026 Guardian's Gate Games LLC.
+    Copyright (c) 2020 VTTAssets
+    Copyright (c) 2020 Jack Holloway
+    Copyright 2012 The Libre Baskerville Project Authors (https://github.com/impallari/Libre-Baskerville) with Reserved Font Name Libre Baskerville.
+    Solbera/Ners/Ryrok/LUCASTUCIOUS D&D 5e fonts attribution (CC BY-SA 4.0).
+  argument:
+    input: Input project directory or .zip for export mode.
+  commands:
+    compile: "Compile/export and standalone JSON-to-Markdown upgrade operations."
+    new: "Scaffold or re-seed a Grimoire project."
+    mcp: "Run MCP lore server mode."
+    dndBeyond: "Sync D&D Beyond content into project folders as JSON."
+    search: "Search project entities and print CLI-friendly entry summaries."
+  options:
+    mcp: Run MCP lore server mode.
+    dndBeyond: Sync D&D Beyond content into project folders as JSON.
+    cobalt: D&D Beyond CobaltSession token.
+    patreonKey: Patreon key for MrPrimate's official proxy server. Falls back to MRPRIMATE_PATREON (or DND_BEYOND_PATREON_KEY).
+    homebrew: Include homebrew content.
+    campaign: Campaign id to sync character sheets from.
+    item: D&D Beyond item name wildcard pattern. Repeat to include multiple items.
+    creature: D&D Beyond creature/monster name wildcard pattern. Repeat to include multiple creatures.
+    spell: D&D Beyond spell name wildcard pattern. Repeat to include multiple spells.
+    characterSheet: D&D Beyond character sheet name filter. Requires --campaign.
+    upgrade: Convert JSON files under the output directory into Markdown with YAML front matter.
+    selfProxy: Use Grimoire's in-process DDB proxy instead of MrPrimate's proxy. Set DND_BEYOND_PROXY to use an external compatible proxy.
+    new: Scaffold a new Grimoire project in the current directory or provided input path.
+    force: Overwrite existing scaffolded files (used with `grimoire new`).
+    project: Project path for `mcp` command mode.
+    output: Output target path.
+    verbose: Enable verbose debug logging output.
+    searchInput: "Input directory to search (defaults to current directory)."
+    searchPath: "Restrict search to specific top-level subdirectories (for example: spells, creatures, items). Repeat or pass comma-separated values."
+    searchQuery: "Search query text."
+    searchMode: "Search mode: catalog, full-text, property, keyword-usage, or cross-reference."
+    searchProperty: "Property path filter for property mode (for example: definition.name)."
+    searchLimit: "Maximum number of matches to return."
+    searchColor: "Force ANSI colorized search output."
+  errors:
+    newCannotCombine: "Error: --new cannot be combined with --output or --project."
+    dndbCannotCombineMcp: "Error: --dndb cannot be combined with --mcp."
+    dndbRequiresOutput: "Error: --dndb requires -o/--output for the output base directory."
+    missingCobalt: "Error: provide --cobalt <token> or set DND_BEYOND_COBALT."
+    general: "Error: {0}"
+    selfProxyRequiresDndb: "Error: --self-proxy can only be used with --dndb."
+    upgradeCannotCombineMcp: "Error: --upgrade cannot be combined with --mcp."
+    upgradeRequiresOutput: "Error: --upgrade requires -o/--output for the project directory to convert."
+    outputInvalidWithMcp: "Error: --output is not valid when --mcp is used."
+    invalidProxyUri: "DND_BEYOND_PROXY is not a valid absolute URI: {0}"
+  messages:
+    scaffolded: "Scaffolded new Grimoire project at: {0}"
+    dndbSynced: "Synced D&D Beyond: sources={0}, items={1}, spells={2}, creatures={3}, players={4}{5}"
+    upgradeSuffix: ", upgraded={0}"
+    upgraded: "Upgraded JSON to Markdown: files={0}"
+    compiled: "Compiled {0} input to {1}: {2}"
+    searchResults: "Search results: {0} results in {1}"
+    searchNoResults: "Search results: 0 results in {0}"
+  usage:
+    main: "Usage: grimoire compile -o <output> <input>"
+    mcpInput: "   or: grimoire compile --mcp [<project-path>]"
+    mcpProject: "   or: grimoire compile --mcp --project <project-path>"
+    dndb: "   or: grimoire compile -D -o <project-path> [-I <pattern>] [-S <pattern>] [-M <pattern>] [-P <pattern>] [-u] [--self-proxy]"
+    upgrade: "   or: grimoire compile -u -o <project-path-or-json-wildcard>"
+    compileMain: "Usage: grimoire compile -o <output> <input>"
+    compileMcpInput: "   or: grimoire compile --mcp [<project-path>]"
+    compileMcpProject: "   or: grimoire compile --mcp --project <project-path>"
+    compileDndb: "   or: grimoire compile -D -o <project-path> [-I <pattern>] [-S <pattern>] [-M <pattern>] [-P <pattern>] [-u] [--self-proxy]"
+    compileUpgrade: "   or: grimoire compile -u -o <project-path-or-json-wildcard>"
+core:
+  dndBeyond:
+    errors:
+      missingCobalt: A D&D Beyond cobalt token is required.
+      characterSheetRequiresCampaign: "DDB sync: --character-sheet by name requires --campaign so character names can be resolved. Numeric D&D Beyond character IDs can be used without --campaign."
+      requestFailed: "D&D Beyond request failed with HTTP {0} {1}: {2}"
+      proxyFailure: "{0}: {1}. Sign in at {2}, clear any security challenge or CAPTCHA, then retry with a fresh CobaltSession cookie."
+      challenge: "D&D Beyond blocked the request or needs a fresh browser session. Sign in manually at {0}, clear any security challenge or CAPTCHA, copy a fresh CobaltSession cookie, then retry."
+      itemDownload: D&D Beyond item download failed
+      creatureDownload: D&D Beyond creature download failed
+      campaignCharacterLookup: D&D Beyond campaign character lookup failed
+      spellDownloadForClass: "D&D Beyond spell download failed for {0} {1}"
+      characterDownloadForId: "D&D Beyond character sheet download failed for {0}"
+      authFailed: D&D Beyond cobalt authentication failed
+  directProxy:
+    messages:
+      unsupportedRoute: "Unsupported local DDB proxy route: {0}"
+      invalidCobalt: You must supply a valid cobalt value.
+      authenticated: Authenticated.
+      invalidQuery: Invalid query
+      itemsReceived: All available items successfully received.
+      spellsReceived: All available spells successfully received.
+      monstersReceived: All available monsters successfully received.
+      characterReceived: Character successfully received.
+      campaignsReceived: All available campaigns successfully received.
+      campaignCharactersReceived: Campaign characters received.
+  upgrade:
+    errors:
+      missingPath: "Upgrade: path or wildcard pattern is required."
+      wildcardDirectoryMissing: "Upgrade wildcard directory not found: {0}"
+      pathMissing: "Upgrade path not found: {0}"
+      missingRoot: "Upgrade: root directory is required."
+      directoryMissing: "Upgrade directory not found: {0}"
+ui:
+  title: Grimoire
+  shell:
+    workspace: Workspace
+  mainHeading: Grimoire Desktop UI
+  compile:
+    heading: Compile Project
+    inputPlaceholder: Input project path or zip path
+    outputPlaceholder: Output path (.pdf/.db/or folder)
+    targetTitle: Target
+    targetWebsite: Website
+    targetPdf: Pdf
+    targetFoundryDb: FoundryDb
+    button: Compile
+    validation: "Compile: input and output are required."
+    result: "Compile finished: {0} -> {1}"
+  scaffold:
+    heading: Scaffold New Project
+    placeholder: Target directory
+    button: Scaffold
+    validation: "Scaffold: target path is required."
+    result: "Scaffold complete: {0}"
+  dndb:
+    heading: D&D Beyond Import
+    outputPlaceholder: Project output folder
+    cobaltPlaceholder: CobaltSession cookie (optional if env var is set)
+    patreonPlaceholder: Patreon key for MrPrimate proxy (optional if MRPRIMATE_PATREON is set)
+    campaignPlaceholder: Campaign ID for character sheets
+    itemPlaceholder: Item patterns
+    spellPlaceholder: Spell patterns
+    creaturePlaceholder: Creature patterns
+    characterSheetPlaceholder: Character sheet patterns
+    homebrew: Homebrew
+    upgrade: Upgrade to Markdown
+    button: Import D&D Beyond
+    outputValidation: "DDB sync: output path is required."
+    cobaltValidation: "DDB sync: cobalt token missing (Entry or DND_BEYOND_COBALT)."
+    campaignValidation: "DDB sync: campaign ID must be an integer."
+    result: "DDB sync complete: sources={0}, items={1}, spells={2}, creatures={3}, players={4}{5}"
+    upgradeSuffix: ", upgraded={0}"
+  lore:
+    heading: Lore Search (MCP Equivalent Query)
+    projectPlaceholder: Project path
+    queryPlaceholder: Search query
+    button: Search Lore
+    validation: "Lore search: project path and query are required."
+    result: "Lore search complete: {0} results."
+  about:
+    heading: About and attributions
+    body: |
+      Copyright (c) 2026 Guardian's Gate Games LLC.
+      Copyright (c) 2020 VTTAssets.
+      Copyright (c) 2020 Jack Holloway.
+      Copyright (c) 2012 The Libre Baskerville Project Authors (https://github.com/impallari/Libre-Baskerville).
+      Solbera/Ners/Ryrok/LUCASTUCIOUS D&D 5e fonts attribution (CC BY-SA 4.0).
+  status:
+    placeholder: Operation status will appear here...
+    error: "Error: {0}"
+    timestampFormat: "HH:mm:ss"
+    line: "[{0}] {1}"

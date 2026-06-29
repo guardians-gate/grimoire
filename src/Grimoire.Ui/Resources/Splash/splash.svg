@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(0,6)">
+        <path d="M106 122C106 106 119 92 135 92H224V336H135C119 336 106 323 106 307V122Z" fill="#fff3d2" />
+        <path d="M232 92H321C337 92 350 106 350 122V307C350 323 337 336 321 336H232V92Z" fill="#ffe9ba" />
+        <rect x="220" y="86" width="16" height="258" rx="7" fill="#d9b161" />
+        <rect x="122" y="118" width="86" height="8" rx="4" fill="#e0c98f" />
+        <rect x="122" y="138" width="74" height="8" rx="4" fill="#e0c98f" />
+        <rect x="248" y="118" width="86" height="8" rx="4" fill="#e0c98f" />
+        <rect x="248" y="138" width="74" height="8" rx="4" fill="#e0c98f" />
+        <circle cx="228" cy="228" r="28" fill="#f3cf7f" />
+        <path d="M228 208L234 223H250L237 233L243 248L228 239L213 248L219 233L206 223H222Z" fill="#fff8e8" />
+        <path d="M228 56L235 76H257L239 88L246 108L228 96L210 108L217 88L199 76H221Z" fill="#fff1cf" />
+        <rect x="224" y="108" width="8" height="18" rx="4" fill="#fff1cf" />
+    </g>
+</svg>

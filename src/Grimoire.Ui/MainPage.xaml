@@ -1,0 +1,957 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Grimoire.Ui.MainPage"
+             BackgroundColor="Transparent">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="New project" Clicked="OnNewProjectMenuClicked" />
+            <MenuFlyoutItem Text="Open directory" Clicked="OnOpenDirectoryMenuClicked" />
+            <MenuFlyoutItem Text="Open zip" Clicked="OnOpenZipMenuClicked" />
+            <MenuFlyoutItem Text="Save" Clicked="OnSaveFileClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Browse asset" Clicked="OnBrowseAssetClicked" />
+            <MenuFlyoutItem Text="Copy asset into project" Clicked="OnImportAssetClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Browse zip" Clicked="OnBrowseZipClicked" />
+            <MenuFlyoutItem Text="Save zip as" Clicked="OnBrowseZipExportClicked" />
+            <MenuFlyoutItem Text="Import zip" Clicked="OnImportZipClicked" />
+            <MenuFlyoutItem Text="Export zip" Clicked="OnExportZipClicked" />
+        </MenuBarItem>
+        <MenuBarItem Text="Project">
+            <MenuFlyoutItem Text="Open selected" Clicked="OnProjectContextOpenClicked" />
+            <MenuFlyoutItem Text="Show selected in filesystem" Clicked="OnProjectContextShowClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Cut selected" Clicked="OnProjectContextCutClicked" />
+            <MenuFlyoutItem Text="Copy selected" Clicked="OnProjectContextCopyClicked" />
+            <MenuFlyoutItem Text="Paste into selected folder" Clicked="OnProjectContextPasteClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Rename selected" Clicked="OnProjectContextRenameClicked" />
+            <MenuFlyoutItem Text="Delete selected" Clicked="OnProjectContextDeleteClicked" />
+        </MenuBarItem>
+        <MenuBarItem Text="Build">
+            <MenuFlyoutItem Text="Build all" Clicked="OnBuildAllMenuClicked" />
+            <MenuFlyoutItem Text="Build FoundryVTT" Clicked="OnBuildFoundryMenuClicked" />
+            <MenuFlyoutItem Text="Build HTML" Clicked="OnBuildHtmlMenuClicked" />
+            <MenuFlyoutItem Text="Build PDF" Clicked="OnBuildPdfMenuClicked" />
+        </MenuBarItem>
+        <MenuBarItem Text="Tools">
+            <MenuFlyoutItem Text="DDB import" Clicked="OnSyncDndbClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Lore search" Clicked="OnLoreSearchClicked" />
+            <MenuFlyoutItem Text="Reference scan" Clicked="OnRefreshReferenceScanClicked" />
+            <MenuFlyoutItem Text="Log" Clicked="OnShowLogClicked" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Text="Refresh git" Clicked="OnRefreshGitClicked" />
+            <MenuFlyoutItem Text="Commit git" Clicked="OnCommitGitClicked" />
+        </MenuBarItem>
+        <MenuBarItem Text="View">
+            <MenuFlyoutItem Text="Project" Clicked="OnShowProjectPaneClicked" />
+            <MenuFlyoutItem Text="Tools" Clicked="OnShowToolsPaneClicked" />
+            <MenuFlyoutItem Text="Bottom pane" Clicked="OnShowBottomPaneClicked" />
+            <MenuFlyoutItem Text="Log" Clicked="OnShowLogClicked" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+
+    <Grid RowDefinitions="Auto,*,28">
+        <Grid x:Name="TopToolbar"
+              Grid.Row="0"
+              Padding="10,7"
+              ColumnDefinitions="Auto,Auto,Auto,Auto,128,*,184,Auto"
+              ColumnSpacing="8"
+              BackgroundColor="Transparent">
+            <Grid>
+                <Label x:Name="MainHeadingOutlineTopLeftLabel"
+                       Margin="-1,-1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineTopRightLabel"
+                       Margin="1,-1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineBottomLeftLabel"
+                       Margin="-1,1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineBottomRightLabel"
+                       Margin="1,1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineTopLabel"
+                       Margin="0,-1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineRightLabel"
+                       Margin="1,0,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineBottomLabel"
+                       Margin="0,1,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingOutlineLeftLabel"
+                       Margin="-1,0,0,0"
+                       Text="Grimoire - No project"
+                       TextColor="#090606"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+                <Label x:Name="MainHeadingLabel"
+                       Text="Grimoire - No project"
+                       TextColor="#D9B76E"
+                       FontFamily="NodestoCapsCondensedHeading"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+            </Grid>
+            <Button Grid.Column="1"
+                    x:Name="NavigateBackButton"
+                    Text="arrow_back"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    Padding="8,6"
+                    CornerRadius="8"
+                    BackgroundColor="#E6253138"
+                    TextColor="#F7FAF8"
+                    IsEnabled="False"
+                    SemanticProperties.Description="Navigate back"
+                    ToolTipProperties.Text="Navigate back"
+                    Clicked="OnNavigateBackClicked" />
+            <Button Grid.Column="2"
+                    x:Name="NavigateForwardButton"
+                    Text="arrow_forward"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    Padding="8,6"
+                    CornerRadius="8"
+                    BackgroundColor="#E6253138"
+                    TextColor="#F7FAF8"
+                    IsEnabled="False"
+                    SemanticProperties.Description="Navigate forward"
+                    ToolTipProperties.Text="Navigate forward"
+                    Clicked="OnNavigateForwardClicked" />
+            <Button Grid.Column="3"
+                    Text="add"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    Padding="8,6"
+                    CornerRadius="8"
+                    BackgroundColor="#E6253138"
+                    TextColor="#F7FAF8"
+                    SemanticProperties.Description="New project"
+                    ToolTipProperties.Text="New project"
+                    Clicked="OnNewProjectMenuClicked" />
+            <Border Grid.Column="4"
+                    Stroke="#34434A"
+                    BackgroundColor="#E6253138"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="6" />
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="*,34"
+                      ColumnSpacing="0">
+                    <Button x:Name="OpenButton"
+                            Text="Open"
+                            CornerRadius="0"
+                            BackgroundColor="#E6253138"
+                            TextColor="#F7FAF8"
+                            ToolTipProperties.Text="Open project directory"
+                            Clicked="OnOpenDirectoryMenuClicked" />
+                    <Button x:Name="OpenDropdownButton"
+                            Grid.Column="1"
+                            Text="keyboard_arrow_down"
+                            FontFamily="MaterialSymbolsSharp"
+                            FontSize="20"
+                            TextColor="#F7FAF8"
+                            CornerRadius="0"
+                            BackgroundColor="#162024"
+                            SemanticProperties.Description="Open project options"
+                            ToolTipProperties.Text="Open project options"
+                            Clicked="OnOpenDropdownClicked" />
+                </Grid>
+            </Border>
+            <Entry x:Name="ProjectPathEntry"
+                   Grid.Column="5"
+                   Placeholder="Project directory"
+                   TextColor="#F7FAF8"
+                   PlaceholderColor="#89989A"
+                   BackgroundColor="#E6253138" />
+            <Border Grid.Column="6"
+                    Stroke="#D66A55"
+                    BackgroundColor="#B84A3B"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="6" />
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="*,38"
+                      ColumnSpacing="0">
+                    <Button x:Name="BuildButton"
+                            Text="Build all"
+                            FontAttributes="Bold"
+                            BackgroundColor="#B84A3B"
+                            TextColor="#F7FAF8"
+                            CornerRadius="0"
+                            ToolTipProperties.Text="Build selected target"
+                            Clicked="OnBuildClicked" />
+                    <Button x:Name="BuildDropdownButton"
+                            Grid.Column="1"
+                            Text="keyboard_arrow_down"
+                            FontFamily="MaterialSymbolsSharp"
+                            FontSize="20"
+                            TextColor="#F7FAF8"
+                            SemanticProperties.Description="Open build target menu"
+                            BackgroundColor="#7D2E27"
+                            CornerRadius="0"
+                            ToolTipProperties.Text="Open build target menu"
+                            Clicked="OnBuildDropdownClicked" />
+                </Grid>
+            </Border>
+            <Button Grid.Column="7"
+                    Text="save"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    Padding="8,6"
+                    CornerRadius="8"
+                    BackgroundColor="#E6253138"
+                    TextColor="#F7FAF8"
+                    SemanticProperties.Description="Save file"
+                    ToolTipProperties.Text="Save file"
+                    Clicked="OnSaveFileClicked" />
+        </Grid>
+
+        <Grid x:Name="WorkbenchGrid"
+              Grid.Row="1"
+              RowDefinitions="*,6,220"
+              ColumnDefinitions="300,6,*,6,360"
+              BackgroundColor="Transparent">
+            <Grid.GestureRecognizers>
+                <DropGestureRecognizer AllowDrop="True"
+                                       DragOver="OnDockPaneDragOver"
+                                       Drop="OnDockPaneDropped" />
+            </Grid.GestureRecognizers>
+            <Border x:Name="ProjectDock"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    Stroke="#34434A"
+                    BackgroundColor="#E6151B1E"
+                    Padding="0">
+                <Border.GestureRecognizers>
+                    <DropGestureRecognizer AllowDrop="True"
+                                           DragOver="OnDockPaneDragOver"
+                                           Drop="OnDockPaneDropped" />
+                </Border.GestureRecognizers>
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <Grid x:Name="ProjectDockHeader"
+                          Padding="8,6"
+                          ColumnDefinitions="*,Auto,Auto,Auto,Auto"
+                          ColumnSpacing="4"
+                          BackgroundColor="#CC253138">
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnProjectDockHeaderPanUpdated" />
+                            <DragGestureRecognizer DragStarting="OnProjectDockDragStarting" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Project"
+                               TextColor="#D9B76E"
+                               FontAttributes="Bold"
+                               VerticalTextAlignment="Center" />
+                        <Button Grid.Column="1" Text="dock_to_left" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock project pane left" ToolTipProperties.Text="Dock project pane left" Clicked="OnDockProjectLeftClicked" />
+                        <Button Grid.Column="2" Text="dock_to_right" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock project pane right" ToolTipProperties.Text="Dock project pane right" Clicked="OnDockProjectRightClicked" />
+                        <Button Grid.Column="3" Text="vertical_align_bottom" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock project pane bottom" ToolTipProperties.Text="Dock project pane bottom" Clicked="OnDockProjectBottomClicked" />
+                        <Button Grid.Column="4" Text="close" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Collapse project pane" ToolTipProperties.Text="Collapse project pane" Clicked="OnHideProjectPaneClicked" />
+                    </Grid>
+                    <SearchBar x:Name="ProjectSearchBar"
+                               Grid.Row="1"
+                               Placeholder="Search project"
+                               TextColor="#F7FAF8"
+                               PlaceholderColor="#9EAEB0"
+                               CancelButtonColor="#D9B76E"
+                               BackgroundColor="#E6253138"
+                               TextChanged="OnProjectSearchTextChanged" />
+                    <CollectionView x:Name="ProjectFilesView"
+                                    Grid.Row="2"
+                                    SelectionMode="Single"
+                                    SelectionChanged="OnProjectFileSelected">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="4,3"
+                                      ColumnDefinitions="Auto,24,26,*"
+                                      ColumnSpacing="4">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                              Tapped="OnProjectFileDoubleTapped" />
+                                        <DragGestureRecognizer DragStarting="OnProjectEntryDragStarting" />
+                                        <DropGestureRecognizer AllowDrop="True"
+                                                               Drop="OnProjectEntryDropped" />
+                                    </Grid.GestureRecognizers>
+                                    <FlyoutBase.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Open"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextOpenClicked" />
+                                            <MenuFlyoutItem Text="Show in filesystem"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextShowClicked" />
+                                            <MenuFlyoutItem Text="Edit template"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextEditTemplateClicked" />
+                                            <MenuFlyoutSeparator />
+                                            <MenuFlyoutItem Text="Cut"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextCutClicked" />
+                                            <MenuFlyoutItem Text="Copy"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextCopyClicked" />
+                                            <MenuFlyoutItem Text="Paste here"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextPasteClicked" />
+                                            <MenuFlyoutSeparator />
+                                            <MenuFlyoutItem Text="Rename"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextRenameClicked" />
+                                            <MenuFlyoutItem Text="Delete"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnProjectContextDeleteClicked" />
+                                        </MenuFlyout>
+                                    </FlyoutBase.ContextFlyout>
+                                    <Label Text="{Binding TreeIndent}"
+                                           FontFamily="Courier New"
+                                           TextColor="#718185" />
+                                    <Button Grid.Column="1"
+                                            Text="{Binding ExpandGlyph}"
+                                            FontFamily="MaterialSymbolsSharp"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#C9D3D1"
+                                            Padding="0"
+                                            FontSize="16"
+                                            SemanticProperties.Description="Expand or collapse project folder"
+                                            ToolTipProperties.Text="Expand or collapse folder"
+                                            Clicked="OnProjectTreeToggleClicked" />
+                                    <Label Grid.Column="2"
+                                           Text="{Binding IconGlyph}"
+                                           FontFamily="MaterialSymbolsSharp"
+                                           FontSize="15"
+                                           TextColor="#D9B76E"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Grid.Column="3"
+                                           Text="{Binding Name}"
+                                           FontSize="13"
+                                           TextColor="#F7FAF8"
+                                           LineBreakMode="TailTruncation"
+                                           VerticalTextAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+
+            <Button x:Name="ProjectRail"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    Text="folder_open"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    TextColor="#E7EEEC"
+                    BackgroundColor="#D2182024"
+                    WidthRequest="34"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    IsVisible="False"
+                    SemanticProperties.Description="Show project pane"
+                    ToolTipProperties.Text="Show project pane"
+                    Clicked="OnShowProjectPaneClicked" />
+
+            <BoxView x:Name="ProjectSplitter"
+                     Grid.Row="0"
+                     Grid.RowSpan="3"
+                     Grid.Column="1"
+                     BackgroundColor="#34434A">
+                <BoxView.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnProjectSplitterPanUpdated" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Grid x:Name="EditorDock"
+                  Grid.Row="0"
+                  Grid.Column="2"
+                  RowDefinitions="Auto,42,*"
+                  ColumnDefinitions="*,*"
+                  Padding="8,8,8,6"
+                  ColumnSpacing="8"
+                  RowSpacing="6">
+                <Grid.GestureRecognizers>
+                    <DropGestureRecognizer AllowDrop="True"
+                                           DragOver="OnDockPaneDragOver"
+                                           Drop="OnDockPaneDropped" />
+                </Grid.GestureRecognizers>
+                <Grid Grid.ColumnSpan="2"
+                      ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                      ColumnSpacing="8">
+                    <Button Grid.Column="0"
+                            Text="note_add"
+                            FontFamily="MaterialSymbolsSharp"
+                            FontSize="20"
+                            Padding="8,6"
+                            BackgroundColor="#E6253138"
+                            TextColor="#F7FAF8"
+                            SemanticProperties.Description="New content file"
+                            ToolTipProperties.Text="New content file"
+                            Clicked="OnNewContentClicked" />
+                    <Button Grid.Column="1"
+                            Text="data_object"
+                            FontFamily="MaterialSymbolsSharp"
+                            FontSize="20"
+                            Padding="8,6"
+                            BackgroundColor="#E6253138"
+                            TextColor="#F7FAF8"
+                            SemanticProperties.Description="New snippet file"
+                            ToolTipProperties.Text="New snippet file"
+                            Clicked="OnNewSnippetClicked" />
+                    <Label x:Name="CurrentFileLabel"
+                           Grid.Column="2"
+                           Text="No file open"
+                           TextColor="#F7FAF8"
+                           FontAttributes="Bold"
+                           VerticalTextAlignment="Center"
+                           LineBreakMode="TailTruncation" />
+                    <Label x:Name="CurrentLineLabel"
+                           Grid.Column="3"
+                           Text="Line 1"
+                           TextColor="#89989A"
+                           FontSize="12"
+                           VerticalTextAlignment="Center" />
+                    <Label Grid.Column="4"
+                           Text="edit_note"
+                           FontFamily="MaterialSymbolsSharp"
+                           FontSize="20"
+                           TextColor="#6FD1C5"
+                           VerticalTextAlignment="Center" />
+                </Grid>
+                <CollectionView x:Name="EditorTabsView"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                ItemsLayout="HorizontalList"
+                                SelectionMode="Single"
+                                SelectionChanged="OnEditorTabSelected"
+                                BackgroundColor="Transparent">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="{Binding TabAccent}"
+                                    BackgroundColor="{Binding TabBackground}"
+                                    Padding="0"
+                                    Margin="0,0,6,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="7" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="4,24,120,16,28"
+                                      HeightRequest="34"
+                                      ColumnSpacing="4">
+                                    <BoxView BackgroundColor="{Binding TabAccent}" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding IconGlyph}"
+                                           FontFamily="MaterialSymbolsSharp"
+                                           FontSize="17"
+                                           TextColor="#D9B76E"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Grid.Column="2"
+                                           Text="{Binding DisplayName}"
+                                           FontSize="12"
+                                           TextColor="#F7FAF8"
+                                           LineBreakMode="TailTruncation"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Grid.Column="3"
+                                           Text="{Binding DirtyMarker}"
+                                           TextColor="#E95F5C"
+                                           FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center" />
+                                    <Button Grid.Column="4"
+                                            Text="close"
+                                            FontFamily="MaterialSymbolsSharp"
+                                            FontSize="16"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#89989A"
+                                            SemanticProperties.Description="Close tab"
+                                            ToolTipProperties.Text="Close tab"
+                                            Clicked="OnCloseEditorTabClicked" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Border Grid.Row="2"
+                        Grid.Column="0"
+                        Stroke="#34434A"
+                        BackgroundColor="#0D1113">
+                    <Grid RowDefinitions="Auto,*">
+                        <Grid x:Name="SourceModeBar"
+                              BackgroundColor="#F012181B"
+                              Padding="8,6"
+                              ColumnDefinitions="Auto,Auto,*"
+                              ColumnSpacing="8"
+                              IsVisible="False">
+                            <Button x:Name="SourceEditModeButton"
+                                    Text="Edit"
+                                    Clicked="OnSourceEditModeClicked" />
+                            <Button x:Name="SourceSyntaxModeButton"
+                                    Grid.Column="1"
+                                    Text="Syntax"
+                                    Clicked="OnSourceSyntaxModeClicked" />
+                            <Label x:Name="SourceModeHintLabel"
+                                   Grid.Column="2"
+                                   TextColor="#89989A"
+                                   VerticalTextAlignment="Center"
+                                   FontSize="12"
+                                   Text="Syntax highlighting preview for Markdown, JSON, and YAML." />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <WebView x:Name="CodeEditorWebView"
+                                     BackgroundColor="#0D1113"
+                                     Navigating="OnCodeEditorNavigating" />
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2"
+                        Grid.Column="1"
+                        Stroke="#34434A"
+                        BackgroundColor="#F6EBD6">
+                    <Grid>
+                        <WebView x:Name="PreviewWebView"
+                                 Navigating="OnPreviewNavigating" />
+                        <ScrollView x:Name="SettingsEditorScroll"
+                                    IsVisible="False"
+                                    BackgroundColor="#F012181B">
+                            <VerticalStackLayout x:Name="SettingsEditorStack"
+                                                 Spacing="10"
+                                                 Padding="10" />
+                        </ScrollView>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <BoxView x:Name="ToolsSplitter"
+                     Grid.Row="0"
+                     Grid.RowSpan="3"
+                     Grid.Column="3"
+                     WidthRequest="10"
+                     BackgroundColor="#34434A">
+                <BoxView.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnToolsSplitterPanUpdated" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <ScrollView x:Name="ToolsDock"
+                        Grid.Row="0"
+                        Grid.RowSpan="3"
+                        Grid.Column="4"
+                        BackgroundColor="#E6151B1E">
+                <ScrollView.GestureRecognizers>
+                    <DropGestureRecognizer AllowDrop="True"
+                                           DragOver="OnDockPaneDragOver"
+                                           Drop="OnDockPaneDropped" />
+                </ScrollView.GestureRecognizers>
+                <VerticalStackLayout Spacing="10"
+                                     Padding="8">
+                    <Grid x:Name="ToolsDockHeader"
+                          ColumnDefinitions="*,Auto,Auto,Auto,Auto"
+                          ColumnSpacing="4"
+                          BackgroundColor="#CC253138"
+                          Padding="8,6">
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnToolsDockHeaderPanUpdated" />
+                            <DragGestureRecognizer DragStarting="OnToolsDockDragStarting" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="Tools"
+                               TextColor="#D9B76E"
+                               FontAttributes="Bold"
+                               VerticalTextAlignment="Center" />
+                        <Button Grid.Column="1" Text="dock_to_right" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock tools pane right" ToolTipProperties.Text="Dock tools pane right" Clicked="OnDockToolsRightClicked" />
+                        <Button Grid.Column="2" Text="dock_to_left" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock tools pane left" ToolTipProperties.Text="Dock tools pane left" Clicked="OnDockToolsLeftClicked" />
+                        <Button Grid.Column="3" Text="vertical_align_bottom" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock tools pane bottom" ToolTipProperties.Text="Dock tools pane bottom" Clicked="OnDockToolsBottomClicked" />
+                        <Button Grid.Column="4" Text="close" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Collapse tools pane" ToolTipProperties.Text="Collapse tools pane" Clicked="OnHideToolsPaneClicked" />
+                    </Grid>
+
+                    <Border Stroke="#34434A" BackgroundColor="#F012181B" Padding="10">
+                        <VerticalStackLayout Spacing="8">
+                            <Label x:Name="DndbHeadingLabel"
+                                   FontAttributes="Bold"
+                                   TextColor="#D9B76E" />
+                            <Entry x:Name="CobaltTokenEntry" IsPassword="True" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <Entry x:Name="PatreonKeyEntry" IsPassword="True" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <Entry x:Name="CampaignEntry" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                                <Entry x:Name="ItemFilterEntry" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                                <Entry x:Name="SpellFilterEntry" Grid.Column="1" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                                <Entry x:Name="CreatureFilterEntry" Grid.Row="1" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                                <Entry x:Name="CharacterSheetFilterEntry" Grid.Row="1" Grid.Column="1" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            </Grid>
+                            <HorizontalStackLayout Spacing="10">
+                                <HorizontalStackLayout>
+                                    <CheckBox x:Name="HomebrewCheckBox" />
+                                    <Label x:Name="HomebrewLabel" TextColor="#C9D3D1" VerticalTextAlignment="Center" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout>
+                                    <CheckBox x:Name="UpgradeCheckBox" />
+                                    <Label x:Name="UpgradeLabel" TextColor="#C9D3D1" VerticalTextAlignment="Center" />
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+                            <Button x:Name="DndbButton" Clicked="OnSyncDndbClicked" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Stroke="#34434A" BackgroundColor="#F012181B" Padding="10">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Git" FontAttributes="Bold" TextColor="#D9B76E" />
+                            <Entry x:Name="CommitMessageEntry" Placeholder="Commit message" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="Refresh" Clicked="OnRefreshGitClicked" />
+                                <Button Text="Commit" Clicked="OnCommitGitClicked" />
+                            </HorizontalStackLayout>
+                            <Label Text="Changes" FontAttributes="Bold" TextColor="#C9D3D1" />
+                            <CollectionView x:Name="GitStatusView" HeightRequest="110">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="42,*" Padding="0,3">
+                                            <Label Text="{Binding Status}" TextColor="#D9B76E" FontAttributes="Bold" />
+                                            <Label Grid.Column="1" Text="{Binding Path}" TextColor="#F7FAF8" FontSize="12" LineBreakMode="TailTruncation" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                            <Label Text="History" FontAttributes="Bold" TextColor="#C9D3D1" />
+                            <CollectionView x:Name="GitHistoryView" HeightRequest="120">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <VerticalStackLayout Padding="0,4">
+                                            <Label Text="{Binding Subject}" TextColor="#F7FAF8" FontSize="12" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Commit}" FontSize="11" TextColor="#D9B76E" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Stroke="#34434A" BackgroundColor="#F012181B" Padding="10">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Assets and archives" FontAttributes="Bold" TextColor="#D9B76E" />
+                            <Entry x:Name="AssetPathEntry" Placeholder="External image or asset path" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <Entry x:Name="AssetTargetEntry" Placeholder="Project asset folder (assets)" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="Browse asset" Clicked="OnBrowseAssetClicked" />
+                                <Button Text="Copy asset into project" Clicked="OnImportAssetClicked" />
+                            </HorizontalStackLayout>
+                            <Entry x:Name="ZipPathEntry" Placeholder="Zip import/export path" TextColor="#F7FAF8" PlaceholderColor="#89989A" BackgroundColor="#E6253138" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="Browse zip" Clicked="OnBrowseZipClicked" />
+                                <Button Text="Save zip as" Clicked="OnBrowseZipExportClicked" />
+                                <Button Text="Import zip" Clicked="OnImportZipClicked" />
+                                <Button Text="Export zip" Clicked="OnExportZipClicked" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Button x:Name="ToolsRail"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="4"
+                    Text="construction"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    TextColor="#E7EEEC"
+                    BackgroundColor="#D2182024"
+                    WidthRequest="34"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    IsVisible="False"
+                    SemanticProperties.Description="Show tools pane"
+                    ToolTipProperties.Text="Show tools pane"
+                    Clicked="OnShowToolsPaneClicked" />
+
+            <BoxView x:Name="BottomSplitter"
+                     Grid.Row="1"
+                     Grid.Column="2"
+                     BackgroundColor="#34434A">
+                <BoxView.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnBottomSplitterPanUpdated" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border x:Name="BottomDock"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Stroke="#34434A"
+                    BackgroundColor="#E6151B1E"
+                    Padding="0">
+                <Border.GestureRecognizers>
+                    <DropGestureRecognizer AllowDrop="True"
+                                           DragOver="OnDockPaneDragOver"
+                                           Drop="OnDockPaneDropped" />
+                </Border.GestureRecognizers>
+                <Grid RowDefinitions="Auto,*">
+                    <Grid x:Name="BottomDockHeader"
+                          Padding="8,6"
+                          ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto"
+                          ColumnSpacing="6"
+                          BackgroundColor="#CC253138">
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnBottomDockHeaderPanUpdated" />
+                            <DragGestureRecognizer DragStarting="OnBottomDockDragStarting" />
+                        </Grid.GestureRecognizers>
+                        <Button Text="Lore search" Clicked="OnBottomLoreTabClicked" />
+                        <Button Grid.Column="1" Text="Reference scan" Clicked="OnBottomReferenceTabClicked" />
+                        <Button Grid.Column="2" Text="Log" Clicked="OnBottomLogTabClicked" />
+                        <Label x:Name="BottomPaneTitleLabel"
+                               Grid.Column="3"
+                               Text="Lore search"
+                               TextColor="#D9B76E"
+                               VerticalTextAlignment="Center" />
+                        <Button Grid.Column="4" Text="dock_to_left" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock bottom pane left" ToolTipProperties.Text="Dock bottom pane left" Clicked="OnDockBottomLeftClicked" />
+                        <Button Grid.Column="5" Text="dock_to_right" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Dock bottom pane right" ToolTipProperties.Text="Dock bottom pane right" Clicked="OnDockBottomRightClicked" />
+                        <Button Grid.Column="6" Text="close" FontFamily="MaterialSymbolsSharp" FontSize="18" TextColor="#E7EEEC" BackgroundColor="Transparent" SemanticProperties.Description="Collapse bottom pane" ToolTipProperties.Text="Collapse bottom pane" Clicked="OnHideBottomPaneClicked" />
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid x:Name="LorePanel" RowDefinitions="Auto,*" Padding="8" RowSpacing="6">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <SearchBar x:Name="LoreQueryEntry"
+                                           Placeholder="Find lore text"
+                                           TextColor="#F7FAF8"
+                                           PlaceholderColor="#9EAEB0"
+                                           CancelButtonColor="#D9B76E"
+                                           BackgroundColor="#E6253138"
+                                           SearchButtonPressed="OnLoreSearchSubmitted" />
+                                <Button Grid.Column="1" x:Name="LoreSearchButton" Clicked="OnLoreSearchClicked" />
+                            </Grid>
+                            <CollectionView x:Name="LoreResultsView" Grid.Row="1" SelectionMode="Single" SelectionChanged="OnLoreResultSelected">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="180,80,*" Padding="0,4" ColumnSpacing="8">
+                                            <Label Text="{Binding Path}" TextColor="#F7FAF8" FontSize="12" LineBreakMode="TailTruncation" />
+                                            <Label Grid.Column="1" Text="{Binding LineNumber, StringFormat='Line {0}'}" TextColor="#D9B76E" FontSize="12" />
+                                            <Label Grid.Column="2" Text="{Binding Excerpt}" TextColor="#C9D3D1" FontSize="12" LineBreakMode="TailTruncation" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+
+                        <Grid x:Name="ReferencePanel" RowDefinitions="Auto,*" Padding="8" RowSpacing="6" IsVisible="False">
+                            <Label x:Name="ReferenceSummaryLabel" Text="No project loaded" TextColor="#D9B76E" />
+                            <CollectionView x:Name="ReferenceIssuesView" Grid.Row="1">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="220,80,*" Padding="0,3" ColumnSpacing="8">
+                                            <Label Text="{Binding Path}" TextColor="#F7FAF8" FontSize="12" LineBreakMode="TailTruncation" />
+                                            <Label Grid.Column="1" Text="{Binding LineNumber, StringFormat='Line {0}'}" TextColor="#D9B76E" FontSize="12" />
+                                            <Label Grid.Column="2" Text="{Binding Reference}" TextColor="#C9D3D1" FontSize="12" LineBreakMode="TailTruncation" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+
+                        <Editor x:Name="LogEditor"
+                                IsVisible="False"
+                                IsReadOnly="True"
+                                AutoSize="Disabled"
+                                TextColor="#F7FAF8"
+                                BackgroundColor="#F012181B" />
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Button x:Name="BottomRail"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="search"
+                    FontFamily="MaterialSymbolsSharp"
+                    FontSize="20"
+                    TextColor="#E7EEEC"
+                    BackgroundColor="#D2182024"
+                    HeightRequest="30"
+                    HorizontalOptions="Start"
+                    VerticalOptions="End"
+                    IsVisible="False"
+                    SemanticProperties.Description="Show bottom pane"
+                    ToolTipProperties.Text="Show bottom pane"
+                    Clicked="OnShowBottomPaneClicked" />
+        </Grid>
+
+        <Border x:Name="OpenMenuFlyout"
+                Grid.Row="1"
+                IsVisible="False"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
+                Margin="128,4,0,0"
+                Stroke="#46565D"
+                BackgroundColor="#E6151B1E"
+                Padding="6">
+            <VerticalStackLayout WidthRequest="160" Spacing="2">
+                <Button Text="Open directory" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnOpenDirectoryMenuClicked" />
+                <Button Text="Open ZIP" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnOpenZipMenuClicked" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Border x:Name="BuildMenuFlyout"
+                Grid.Row="1"
+                IsVisible="False"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                Margin="0,4,82,0"
+                Stroke="#46565D"
+                BackgroundColor="#E6151B1E"
+                Padding="6">
+            <VerticalStackLayout WidthRequest="190" Spacing="2">
+                <Button Text="Build all" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnBuildAllMenuClicked" />
+                <Button Text="Build HTML" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnBuildHtmlMenuClicked" />
+                <Button Text="Build FoundryVTT" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnBuildFoundryMenuClicked" />
+                <Button Text="Build PDF" BackgroundColor="#E6253138" TextColor="#F7FAF8" CornerRadius="2" Clicked="OnBuildPdfMenuClicked" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Grid x:Name="BuildOutputsDialog"
+              Grid.Row="1"
+              IsVisible="False"
+              BackgroundColor="#99000000"
+              Padding="24">
+            <Border HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="560"
+                    Stroke="#46565D"
+                    BackgroundColor="#E6151B1E"
+                    Padding="14">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="120,*,Auto"
+                      RowSpacing="10"
+                      ColumnSpacing="8">
+                    <Label x:Name="BuildOutputsTitleLabel"
+                           Grid.ColumnSpan="3"
+                           Text="Build outputs"
+                           TextColor="#D9B76E"
+                           FontAttributes="Bold" />
+                    <Label Grid.Row="1"
+                           Text="HTML"
+                           TextColor="#C9D3D1"
+                           VerticalTextAlignment="Center" />
+                    <Entry x:Name="BuildHtmlOutputEntry"
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           TextColor="#F7FAF8"
+                           BackgroundColor="#E6253138" />
+                    <Button Grid.Row="1"
+                            Grid.Column="2"
+                            Text="Browse"
+                            Clicked="OnBrowseHtmlBuildOutputClicked" />
+                    <Label Grid.Row="2"
+                           Text="FoundryVTT"
+                           TextColor="#C9D3D1"
+                           VerticalTextAlignment="Center" />
+                    <Entry x:Name="BuildFoundryOutputEntry"
+                           Grid.Row="2"
+                           Grid.Column="1"
+                           TextColor="#F7FAF8"
+                           BackgroundColor="#E6253138" />
+                    <Button Grid.Row="2"
+                            Grid.Column="2"
+                            Text="Browse"
+                            Clicked="OnBrowseFoundryBuildOutputClicked" />
+                    <Label Grid.Row="3"
+                           Text="PDF"
+                           TextColor="#C9D3D1"
+                           VerticalTextAlignment="Center" />
+                    <Entry x:Name="BuildPdfOutputEntry"
+                           Grid.Row="3"
+                           Grid.Column="1"
+                           TextColor="#F7FAF8"
+                           BackgroundColor="#E6253138" />
+                    <Button Grid.Row="3"
+                            Grid.Column="2"
+                            Text="Browse"
+                            Clicked="OnBrowsePdfBuildOutputClicked" />
+                    <HorizontalStackLayout Grid.Row="4"
+                                           Grid.ColumnSpan="3"
+                                           HorizontalOptions="End"
+                                           Spacing="8">
+                        <Button Text="Cancel" Clicked="OnCancelBuildOutputsClicked" />
+                        <Button Text="Build" FontAttributes="Bold" Clicked="OnConfirmBuildOutputsClicked" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              ColumnDefinitions="Auto,Auto,360,Auto,*"
+              ColumnSpacing="8"
+              Padding="10,2"
+              BackgroundColor="#E60B0E10">
+            <ActivityIndicator x:Name="BusyIndicator"
+                               Grid.Column="0"
+                               IsVisible="False"
+                               Color="#D9B76E" />
+            <Label x:Name="StatusActionLabel"
+                   Grid.Column="1"
+                   Text="Ready"
+                   TextColor="#C9D3D1"
+                   VerticalTextAlignment="Center" />
+            <Grid Grid.Column="2">
+                <ProgressBar x:Name="StatusProgressBar"
+                             Progress="0"
+                             VerticalOptions="Center" />
+                <Label x:Name="ProgressTextLabel"
+                       Text="Idle"
+                       TextColor="#B3F7FAF8"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       LineBreakMode="HeadTruncation" />
+            </Grid>
+            <Label x:Name="ReferenceStatusLabel"
+                   Grid.Column="3"
+                   Text="References: 0"
+                   TextColor="#C9D3D1"
+                   VerticalTextAlignment="Center" />
+            <Label x:Name="ProjectStatusLabel"
+                   Grid.Column="4"
+                   Text=""
+                   TextColor="#89989A"
+                   LineBreakMode="TailTruncation"
+                   VerticalTextAlignment="Center" />
+        </Grid>
+    </Grid>
+</ContentPage>

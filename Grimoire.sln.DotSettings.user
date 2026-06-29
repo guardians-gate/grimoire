@@ -1,0 +1,6 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=399cd0ae_002D32ba_002D4cf3_002D93b1_002D5e11a5577aa3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CompileWebsiteAndPdfRendersReadableStyledOutputAsync(projectName: &amp;quot;minimal&amp;quot;, sourceProjectPath: &amp;quot;&amp;quot;)" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::AFBCCBB2-54C8-B14E-BBBD-F6EA50D23C54::net10.0::Grimoire.Core.Tests.EndToEndRenderingTests.CompileWebsiteAndPdfRendersReadableStyledOutputAsync.CompileWebsiteAndPdfRendersReadableStyledOutputAsync(projectName: "minimal", sourceProjectPath: "")&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

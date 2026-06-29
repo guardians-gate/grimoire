@@ -1,0 +1,171 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">net10.0-maccatalyst;net10.0</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-windows10.0.22000.0;net10.0</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>Grimoire.Ui</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ApplicationTitle>Grimoire</ApplicationTitle>
+        <ApplicationId>com.guardiansgate.grimoire.ui</ApplicationId>
+        <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+        <AssemblyName Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">Grimoire</AssemblyName>
+        <WindowsPackageType>None</WindowsPackageType>
+        <NoWarn>$(NoWarn);CA1515;CA5392;CA1711</NoWarn>
+        <BuildInParallel Condition="$([MSBuild]::IsOSPlatform('OSX'))">false</BuildInParallel>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.22000.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.22000.0</TargetPlatformMinVersion>
+        <NoWarn>$(NoWarn);CA2007</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'windows'">
+        <DefineConstants>$(DefineConstants);LINUX_GTK</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <StartupObject>Grimoire.Ui.Program</StartupObject>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <CollectBundleResourcesDependsOn>$(CollectBundleResourcesDependsOn);_BundleGrimoireCliForMacCatalyst</CollectBundleResourcesDependsOn>
+        <ValidateXcodeVersion>false</ValidateXcodeVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
+        <MauiFont Include="Resources\Fonts\*"/>
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60"/>
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0"/>
+        <PackageReference Include="SauceControl.Blake2Fast" Version="2.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+        <PackageReference Include="CommunityToolkit.Maui" Version="14.2.0"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <PackageReference Include="Platform.Maui.Linux.Gtk4" Version="0.6.0"/>
+        <PackageReference Include="Platform.Maui.Linux.Gtk4.Essentials" Version="0.6.0"/>
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.2"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <Compile Remove="Platforms/Linux/Program.cs"/>
+        <Compile Include="$(MSBuildProjectDirectory)/Platforms/Linux/Program.cs">
+            <Link>Platforms/Linux/Program.cs</Link>
+            <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Grimoire.Core\Grimoire.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Resources\Images\"/>
+        <Folder Include="Resources\Raw\"/>
+        <Compile Update="App.*.cs" DependentUpon="App.xaml"/>
+        <Compile Update="GrimoireUiWorkflowService.*.cs" DependentUpon="GrimoireUiWorkflowService.cs"/>
+        <Compile Update="MainPage.*.cs" DependentUpon="MainPage.xaml"/>
+    </ItemGroup>
+
+    <UsingTask TaskName="SetEnvironmentVariableTask"
+               TaskFactory="RoslynCodeTaskFactory"
+               AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <Name ParameterType="System.String" Required="true"/>
+            <Value ParameterType="System.String" Required="true"/>
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System"/>
+            <Code Type="Fragment" Language="cs"><![CDATA[
+        Environment.SetEnvironmentVariable(Name, Value);
+      ]]></Code>
+        </Task>
+    </UsingTask>
+
+    <Target Name="_ResolveLatestXcodeDeveloperDir"
+            Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <PropertyGroup>
+            <_ActiveDeveloperDir Condition="'$(DEVELOPER_DIR)' != ''">$([MSBuild]::NormalizePath('$(DEVELOPER_DIR)'))</_ActiveDeveloperDir>
+            <_ActiveDeveloperDir Condition="'$(_ActiveDeveloperDir)' == ''">/var/db/xcode_select_link</_ActiveDeveloperDir>
+            <_ResolvedXcodeDeveloperDir Condition="Exists('$(_ActiveDeveloperDir)/usr/bin/xcodebuild')">$(_ActiveDeveloperDir)</_ResolvedXcodeDeveloperDir>
+        </PropertyGroup>
+
+        <Exec Condition="'$(_ResolvedXcodeDeveloperDir)' == ''"
+              Command="/bin/bash -lc '/bin/ls -1dt /Applications/Xcode*.app 2&gt;/dev/null | /usr/bin/head -n 1 | /usr/bin/sed &quot;s#.app#.app/Contents/Developer#&quot; | /usr/bin/xargs -I {} /bin/test -x &quot;{}/usr/bin/xcodebuild&quot; &amp;&amp; /bin/ls -1dt /Applications/Xcode*.app 2&gt;/dev/null | /usr/bin/head -n 1 | /usr/bin/sed &quot;s#.app#.app/Contents/Developer#&quot;'"
+              IgnoreExitCode="true"
+              ConsoleToMSBuild="true"
+              StandardOutputImportance="Low">
+            <Output TaskParameter="ConsoleOutput" ItemName="_AutoDetectedXcodeDeveloperDirLines"/>
+        </Exec>
+
+        <PropertyGroup>
+            <_AutoDetectedXcodeDeveloperDir>@(_AutoDetectedXcodeDeveloperDirLines->'%(Identity)')</_AutoDetectedXcodeDeveloperDir>
+            <_AutoDetectedXcodeDeveloperDir>$([System.String]::Copy('$(_AutoDetectedXcodeDeveloperDir)').Trim())</_AutoDetectedXcodeDeveloperDir>
+            <_ResolvedXcodeDeveloperDir Condition="'$(_ResolvedXcodeDeveloperDir)' == '' And '$(_AutoDetectedXcodeDeveloperDir)' != '' And Exists('$(_AutoDetectedXcodeDeveloperDir)/usr/bin/xcodebuild')">$(_AutoDetectedXcodeDeveloperDir)</_ResolvedXcodeDeveloperDir>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="_SetMacCatalystDeveloperDir"
+            BeforeTargets="_DetectSdkLocations"
+            DependsOnTargets="_ResolveLatestXcodeDeveloperDir"
+            Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <SetEnvironmentVariableTask Condition="'$(_ResolvedXcodeDeveloperDir)' != ''"
+                                    Name="DEVELOPER_DIR"
+                                    Value="$(_ResolvedXcodeDeveloperDir)"/>
+    </Target>
+
+    <Target Name="_BundleGrimoireCliForMacCatalyst"
+            Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <PropertyGroup>
+            <_GrimoireCoreProjectPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', 'Grimoire.Core', 'Grimoire.Core.csproj'))</_GrimoireCoreProjectPath>
+            <_GrimoireCliProjectPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', 'Grimoire.Cli', 'Grimoire.Cli.csproj'))</_GrimoireCliProjectPath>
+            <_BundledCliPublishDir>$([MSBuild]::EnsureTrailingSlash($([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'bundled-cli'))))</_BundledCliPublishDir>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(_BundledCliPublishDir)"/>
+
+        <MSBuild Projects="$(_GrimoireCoreProjectPath)"
+                 Targets="Restore"
+                 Properties="Configuration=$(Configuration);TargetFramework=net10.0;RuntimeIdentifier=osx-arm64;RuntimeIdentifiers=osx-arm64;RestoreRuntimeIdentifier=osx-arm64"/>
+
+        <MSBuild Projects="$(_GrimoireCliProjectPath)"
+                 Targets="Restore"
+                 Properties="Configuration=$(Configuration);TargetFramework=net10.0;RuntimeIdentifier=osx-arm64;RuntimeIdentifiers=osx-arm64;RestoreRuntimeIdentifier=osx-arm64"/>
+
+        <MSBuild Projects="$(_GrimoireCliProjectPath)"
+                 Targets="Publish"
+                 Properties="Configuration=$(Configuration);TargetFramework=net10.0;RuntimeIdentifier=osx-arm64;RuntimeIdentifiers=osx-arm64;RestoreRuntimeIdentifier=osx-arm64;PublishDir=$(_BundledCliPublishDir);SelfContained=false;UseAppHost=true;Restore=false;NoRestore=true"/>
+
+        <Move Condition="Exists('$(_BundledCliPublishDir)Grimoire.Cli')"
+              SourceFiles="$(_BundledCliPublishDir)Grimoire.Cli"
+              DestinationFiles="$(_BundledCliPublishDir)grimoire"
+              OverwriteReadOnlyFiles="true"/>
+
+        <Exec Condition="Exists('$(_BundledCliPublishDir)grimoire')"
+              Command="/bin/chmod +x &quot;$(_BundledCliPublishDir)grimoire&quot;"/>
+
+        <ItemGroup>
+            <_BundledCliFile Include="$(_BundledCliPublishDir)**/*"
+                             Exclude="$(_BundledCliPublishDir)**/*.pdb"/>
+            <_BundledCliFile Remove="@(_BundledCliFile)"
+                             Condition="$([System.IO.Directory]::Exists('%(Identity)'))"/>
+            <BundleResource Include="@(_BundledCliFile)">
+                <LogicalName>cli/%(_BundledCliFile.RecursiveDir)%(_BundledCliFile.Filename)%(_BundledCliFile.Extension)</LogicalName>
+            </BundleResource>
+        </ItemGroup>
+    </Target>
+</Project>
